@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -6,10 +5,10 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-} from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
-import { AppService } from '../app.service.js';
-import { Prisma } from '@prisma/client';
+} from "@nestjs/websockets";
+import { Server, Socket } from "socket.io";
+import { AppService } from "../app.service.js";
+import { Prisma } from "@prisma/client";
 @WebSocketGateway()
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -18,13 +17,13 @@ export class AppGateway
 
   @WebSocketServer() server: Server;
 
-  @SubscribeMessage('sendMessage')
+  @SubscribeMessage("sendMessage")
   async handleSendMessage(
     client: Socket,
     payload: Prisma.ChatCreateInput,
   ): Promise<void> {
     const newMessage = await this.appService.createMessage(payload);
-    this.server.emit('recMessage', newMessage);
+    this.server.emit("recMessage", newMessage);
   }
 
   afterInit(server: Server) {
