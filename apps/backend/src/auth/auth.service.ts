@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
@@ -15,11 +16,19 @@ export class AuthService {
   ) {}
 
   async register(email: string, password: string, name?: string) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
+    if (existingUser) {
+      throw new BadRequestException('Email already registered');
+    }
+
     const hashed = await bcrypt.hash(password, 10);
     return this.prisma.user.create({
       data: { email, password: hashed, name },
     });
   }
+
   async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) return null;
