@@ -24,7 +24,7 @@ describe('Auth (e2e)', () => {
   it('/auth/register (POST)', () => {
     return request(app.getHttpServer())
       .post('/auth/register')
-      .send({ email: 'newuser@mail.com', password: 'secret123', name: 'Samy' })
+      .send({ email: 'newuser1@mail.com', password: 'secret122', name: 'Samy' })
       .expect(201);
   });
 
